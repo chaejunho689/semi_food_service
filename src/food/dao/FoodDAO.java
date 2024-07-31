@@ -21,7 +21,7 @@ public class FoodDAO {
 	public String session_id = null;
 	public String session_pwd = null;
 	public String session_name = null;
-	public String session_auth = null;
+	public int session_auth;
 	private boolean login_yn;
 	
 	private static FoodDAO instance = new FoodDAO();
@@ -29,7 +29,7 @@ public class FoodDAO {
 	public FoodDAO() {
 		try {
 			Class.forName(driver);
-			System.out.println("driver loading...");
+//			System.out.println("driver loading...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +42,7 @@ public class FoodDAO {
 	public void getConnection() {
 		try {
 			con = DriverManager.getConnection(url, username, password);
-			System.out.println("Oracle Connect...");
+//			System.out.println("Oracle Connect...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -55,7 +55,7 @@ public class FoodDAO {
 			System.out.println("로그인이 필요한 서비스입니다.");
 			return false;
 		}
-		System.out.println(session_name + "님 환영합니다.");
+//		System.out.println(session_name + "님 환영합니다.");
 		return true;
 	}
 	
@@ -71,7 +71,38 @@ public class FoodDAO {
 			
 			if(rs.next()) {
 				exist = true; 
-				login_yn = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { // finally : 에러와 상관없이 끝나면 실행 됨.
+			// 거꾸로 close 해줘야 함.
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return exist;
+	}
+	
+	public boolean common_isLoginSuccess(String id, String pwd) {
+		boolean exist = false;
+		
+		getConnection();
+		try {
+			pstmt = con.prepareStatement("SELECT ID FROM food_account WHERE ID = ? AND PWD = ?");
+			pstmt.setString(1,id);
+			pstmt.setString(2,pwd);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				exist = true; 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -134,7 +165,7 @@ public class FoodDAO {
 				session_id = rs.getString("ID");
 				session_pwd = rs.getString("PWD");
 				session_name = rs.getString("NAME");
-				session_auth = rs.getString("CODE");
+				session_auth = rs.getInt("CODE");
 				login_yn = true;
 			}
 		} catch (SQLException e) {
@@ -152,7 +183,75 @@ public class FoodDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void admin_authUpdate(String id) {
+
+		getConnection();
 		
+		try {
+			pstmt = con.prepareStatement("UPDATE food_account SET CODE = 1 WHERE ID = ?");
+			pstmt.setString(1,id);
+
+			pstmt.executeUpdate();
+			System.out.println("사용자 <" + id + ">에게 관리자 권한이 부여되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { // finally : 에러와 상관없이 끝나면 실행 됨.
+			// 거꾸로 close 해줘야 함.
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void login_update(String id, String pwd, String name) {
+
+		getConnection();
+		
+		try {
+			pstmt = con.prepareStatement("UPDATE food_account SET PWD = ?, NAME = ? WHERE ID = ?");
+			pstmt.setString(1,pwd);
+			pstmt.setString(2,name);
+			pstmt.setString(3,id);
+
+			pstmt.executeUpdate();
+			System.out.println("사용자 <" + id + ">의 정보가 수정되었습니다.");
+			login_logout();
+			System.out.println("다시 로그인 해주세요.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	// 유저 or 관리자 여부 체크 
+	public boolean common_adminYn() {
+		boolean adminYn = false;
+		if(login_yn == true && session_auth == 1) {
+			adminYn = true;
+		} else {
+			adminYn = false;
+		}
+		return adminYn;
 	}
 	
 	

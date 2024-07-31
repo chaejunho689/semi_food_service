@@ -11,8 +11,11 @@ public class FoodRegistService implements Food {
 		Scanner scan = new Scanner(System.in);
 		FoodDAO foodDAO = FoodDAO.getInstance();
 		
+		
+		foodDAO.login_logout();
+		
 		while(true) {
-			System.out.println("아이디를 입력하세요.");
+			System.out.println("회원가입 할 아이디를 입력하세요.");
 			String id = scan.next();
 			
 			//DB
@@ -20,7 +23,7 @@ public class FoodRegistService implements Food {
 			
 			if(exist == true) {
 				System.out.println("중복된 ID입니다.");
-				return;
+				continue;
 			} else {
 				System.out.println("사용 가능한 아이디입니다.");
 				
