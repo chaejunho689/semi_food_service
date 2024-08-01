@@ -14,7 +14,7 @@ public class FoodAccountUpdateService implements Food {
 		IndexMain indexMain = new IndexMain();
 				
 		while(true) {
-					
+					 
 			if(foodDAO.common_logincheck() == false) {
 				System.out.println("먼저 로그인 해주세요..");
 				return;

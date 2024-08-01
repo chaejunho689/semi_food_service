@@ -5,9 +5,17 @@ import java.util.Scanner;
 
 import food.service.Food;
 import food.service.FoodAccountUpdateService;
+import food.service.FoodAdminAuthUpdate;
 import food.service.FoodLoginService;
 import food.service.FoodLogoutService;
 import food.service.FoodRegistService;
+import food.service.MenuAddService;
+import food.service.MenuDeleteService;
+import food.service.MenuEditService;
+import food.service.ResAddService;
+import food.service.ResDeleteService;
+import food.service.ResEditService;
+import food.service.SearchMain;
 
 public class IndexMain {
 
@@ -78,7 +86,7 @@ public class IndexMain {
 			num = scan.nextInt();
 			
 			if(num == 1) {
-				menu();
+				food = new SearchMain();
 			} else if(num == 2) {
 				menu();
 			} else if(num == 3) {
@@ -97,24 +105,62 @@ public class IndexMain {
 		while(true) {
 			System.out.println();
 			System.out.println("***********************");
-			System.out.println("1. 관리자 ");
-			System.out.println("2. 로그인 ");
-			System.out.println("3. 로그아웃 ");
-			System.out.println("4. 프로그램 종료 ");
+			System.out.println("1. 식당 추가 및 수정/삭제");
+			System.out.println("2. 메뉴 추가 및 수정/삭제");
+			System.out.println("3. 회원 관리자 변경");
+			System.out.println("4. 뒤로가기 ");
 			System.out.println("***********************");
-			System.out.print("메뉴입력 :");
+			System.out.print("   번호 : ");
 			num = scan.nextInt();
+			while (true) {
+				if(num == 4) return;
+				if(num == 1) {
+					System.out.println();
+					System.out.println("1. 신규 식당 추가 ");
+					System.out.println("2. 식당 정보 수정 ");
+					System.out.println("3. 식당 정보 삭제 ");
+					System.out.println("4. 뒤로가기");
+					System.out.println();
+					System.out.print("   번호 : ");
+					num = scan.nextInt();
+					if(num == 4) return;
+					if(num ==1) {
+						food = new ResAddService();
+					} else if(num == 2) {
+						food = new ResEditService();
+					} else if(num == 3) {
+						food = new ResDeleteService();
+					} else {
+						System.out.println("1 ~ 4 사이의 숫자를 입력하세요");
+					}
+					
+					food.execute();
+				} else if(num == 2) {
+					System.out.println();
+					System.out.println("1. 신규 음식 추가 ");
+					System.out.println("2. 음식 정보 수정 ");
+					System.out.println("3. 음식 정보 삭제 ");
+					System.out.println("4. 뒤로가기 ");
+					System.out.println();
+					System.out.print("   번호 : ");
+					num = scan.nextInt();
+					if(num == 4) return;
+					if(num == 1) {
+						food = new MenuAddService();
+					} else if(num == 2) {
+						food = new MenuEditService();
+					} else if(num == 3) {
+						food = new MenuDeleteService();
+					} else {
+						System.out.println("1 ~ 4 사이의 숫자를 입력하세요");
+					}
 			
-			if(num == 4) break;
-			if(num == 1) {
-				food = new FoodRegistService();
-			} else if(num == 2) {
-				food = new FoodLoginService();
-			} else if(num == 3) {
-				food = new FoodLogoutService();
+					food.execute();
+				} else if(num == 3) {
+					food = new FoodAdminAuthUpdate();
+					food.execute();
+				}
 			}
-			
-			food.execute();;
 		}
 	}
 	
