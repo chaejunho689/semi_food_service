@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import food.service.Food;
+import food.service.FoodAccountDelete;
 import food.service.FoodAccountUpdateService;
 import food.service.FoodAdminAuthUpdate;
 import food.service.FoodLoginService;
@@ -31,13 +32,14 @@ public class IndexMain {
 			System.out.println("2. 로그인 ");
 			System.out.println("3. 로그아웃 ");
 			System.out.println("4. 회원정보수정 ");
-			System.out.println("5. 프로그램 종료 ");
+			System.out.println("5. 회원탈퇴 ");
+			System.out.println("6. 프로그램 종료 ");
 			System.out.println("***********************");
 			System.out.print("메뉴입력 :");
 			
 			try {
 				num = scan.nextInt();
-				if(num <1 || num > 5) {
+				if(num < 1 || num > 6) {
 					continue;
 				}
 			} catch (InputMismatchException e) {
@@ -46,7 +48,7 @@ public class IndexMain {
                 continue; // 잘못된 입력인 경우 루프를 계속
 			}
 			
-            if (num == 5) break; // 프로그램 종료
+            if (num == 6) break; // 프로그램 종료
 
 			switch(num) {
 			case 1 :
@@ -61,10 +63,10 @@ public class IndexMain {
 			case 4 :
 				food = new FoodAccountUpdateService();
 				break;
+			case 5 :
+				food = new FoodAccountDelete();
+				break;
 			}
-			
-
-			
 			food.execute();;
 		}
 	}

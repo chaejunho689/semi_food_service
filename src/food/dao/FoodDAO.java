@@ -631,6 +631,34 @@ public class FoodDAO {
 		}
 		return su;
 	}
+
+	public void login_delete(String id, String pwd) {
+
+		getConnection();
+		
+		try {
+			pstmt = con.prepareStatement("DELETE food_account WHERE ID = ?");
+			pstmt.setString(1,id);
+
+			pstmt.executeUpdate();
+			System.out.println("사용자 <" + id + ">의 탈퇴처리가 완료 되었습니다.");
+			System.out.println("서비스를 이용해주셔서 감사합니다.");
+			login_logout();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(con != null) {
+					con.close();					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 }
