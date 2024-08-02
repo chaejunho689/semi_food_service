@@ -63,33 +63,28 @@ public class OrderMain implements Food {
 
             foodDAO.saveOrder(userId, orderDetails, totalPrice, foodcode);
 
-            System.out.printf("배달의민족 주문! 결제하실 금액은 %s원입니다%n", foodDAO.PriceConvert(totalPrice));
+            System.out.printf("비트바이트 주문! 결제하실 금액은 %s원입니다%n", foodDAO.PriceConvert(totalPrice));
 
             System.out.println();
-            System.out.println("추가 주문을 원하시면 1번을 눌러주세요");
-            System.out.println("다른 식당을 이용하시려면 2번을 눌러주세요");
-            System.out.println("처음 화면으로 돌아가시려면 3번을 눌러주세요");
-
-            int order = scan.nextInt();
-            scan.nextLine(); 
+          
+            System.out.println("처음 화면으로 돌아갑니다!");
+            
+            try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+            
+            int order = 1;
 
             switch (order) {
                 case 1:
-                    new OrderMain().execute(); 
-                    break;
-                case 2:
-                    new SearchMain().execute(); 
-                    break;
-                case 3:
                     new IndexMain().menu_user(); 
                     break;
-                default:
-                    System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
-                    new IndexMain().menu_user(); 
-                    break;
+       
             }
         } finally {
-            scan.close(); 
+          
         }
     }
 }

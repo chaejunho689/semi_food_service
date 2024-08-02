@@ -6,9 +6,9 @@ public class SelectMain implements Food{
 	
 	public void execute() {
 		
-		FoodDAO foodDAO = FoodDAO.getInstance();
+		//FoodDAO foodDAO = FoodDAO.getInstance();
 		
-		foodDAO.ShowRes();
+		//foodDAO.ShowRes();
 
 }
 }

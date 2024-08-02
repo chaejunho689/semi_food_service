@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -660,8 +661,8 @@ public class FoodDAO {
 	}
 
 	public void saveOrder(String userId, Map<String, Integer> orderDetails, double totalPrice, int foodcode) {
-		String query = "INSERT INTO ORDERS (ID, CODE, QUANTITY, TOTALPRICE, ORDERDATE) "
-				+ "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)"; 
+		String query = "INSERT INTO ORDERS (ORDERID,ID, CODE, QUANTITY, TOTALPRICE, ORDERDATE) "
+				+ "VALUES (FOOD_SEQUENCE.NEXTVAL, ?, ?, ?, ?, CURRENT_TIMESTAMP)"; 
 
 		try (PreparedStatement pstmt = con.prepareStatement(query)) {
 			for (Map.Entry<String, Integer> entry : orderDetails.entrySet()) {
@@ -688,9 +689,9 @@ public class FoodDAO {
 
 		getConnection();
 		System.out.println("************************");
-		System.out.println("식당 데이터 베이스에 접속되었습니다");
+		System.out.println("식당 목록을 보여드립니다");
 		System.out.println("************************");
-		System.out.println("식당코드"+"\t"+"식당명"+"\t"+"전화번호"+"\t"+"\t"+"위치"+"\t"+"\t"+"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)");
+		System.out.println("식당코드"+"\t"+"식당명"+"\t"+"전화번호"+"\t"+"\t"+"위치" +"\t"+ "\t" +"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)");
 
 		String sql = "select * from RESTAURANT";
 		try {
@@ -706,23 +707,7 @@ public class FoodDAO {
 						+ rs.getString("KIND"));
 
 			}//while
-
-			System.out.println();
-			System.out.println("다시 검색하시려면 1번을 눌러주세요");
-			System.out.println();
-			System.out.println("처음 화면으로 돌아가시려면 2번을 눌러주세요");
-
-			Scanner scan =new Scanner(System.in);
-
-			int order = scan.nextInt();
-
-			switch(order){
-
-			case 1: new SelectMain().execute();
-
-
-			case 2: new IndexMain().menu_user();
-			}
+			
 
 		}
 		catch (SQLException e) {
@@ -741,32 +726,10 @@ public class FoodDAO {
 	public void SearchRes() {
 		getConnection();//접속
 
-		System.out.println("********************************");
-
-		System.out.println("식당 데이터 베이스에 접속되었습니다");
-
-		try {
 
 			Scanner scan = new Scanner(System.in);
 
 			System.out.println("********************************");
-
-			System.out.println("찾고싶은 식당이름에 포함된 단어를 입력해주세요");
-
-			String Res = scan.next();
-
-			System.out.println("코드"+"\t"+"식당명");
-
-			String sql = "SELECT * FROM Restaurant WHERE name like  ?";
-
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "%" + Res + "%");
-			rs = pstmt.executeQuery(); //실행
-
-
-			while(rs.next()) {
-				System.out.println(rs.getString("NAME"));
-			}//while
 
 
 			System.out.println("식당이름을 입력하시면 메뉴와 가격을 보여드립니다 ");	
@@ -774,42 +737,83 @@ public class FoodDAO {
 			String code = scan.next();  // 조인문으로 변경
 
 			String sql2 = "SELECT F.NAME, F.PRICE, F.CODE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE R.NAME LIKE ? AND ROWNUM = 1 ";
-			pstmt = con.prepareStatement(sql2);
+			try {
+				pstmt = con.prepareStatement(sql2);
+			
 			pstmt.setString(1, '%' + code + '%');
 
 			rs = pstmt.executeQuery(); //실행
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			while(rs.next()) {
-				System.out.println(rs.getString("NAME") + "\t" +
-						PriceConvert(rs.getInt("PRICE"))+"원");
-
+			try {
+				while(rs.next()) {
+				    System.out.println("-------------------------");
+				    System.out.println("|\t    메뉴판     \t|");
+				    System.out.println("|     "+ rs.getString("NAME") + "\t" +
+				    PriceConvert(rs.getInt("PRICE"))+"원" + "\t|");
+				    System.out.println("-------------------------");
+				}
+			
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}//while
-
+			
+		while(true) {
 			System.out.println();
 			System.out.println("주문을 원하시면 1번을 눌러주세요");
 			System.out.println();
 			System.out.println("다른식당을 이용하시려면 2번을 눌러주세요");
 			System.out.println();
 			System.out.println("처음 화면으로 돌아가시려면 3번을 눌러주세요");
-
-			int order = scan.nextInt();
+			
+			int order;
+			
+			
+			
+			try {
+				order =scan.nextInt();
+				if(order < 1 || order > 3) {
+					continue;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("숫자만 입력하세요.");
+                scan.next(); // 잘못된 입력을 읽어들이고 다음 입력을 기다리게 함
+                continue; // 잘못된 입력인 경우 루프를 계속
+			}
 
 			switch(order){
 
 			case 1:
 
-
-				String sql3 = "SELECT F.NAME, F.PRICE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE R.NAME = ?";
-				pstmt = con.prepareStatement(sql3);
-				pstmt.setString(1, code);
+				
+				String sql3 = "SELECT F.NAME, F.PRICE, F.CODE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE R.NAME LIKE ? AND ROWNUM = 1 ";
+				try {
+					pstmt = con.prepareStatement(sql3);
+				
+					pstmt.setString(1, '%' + code + '%');
 
 				rs = pstmt.executeQuery(); //실행
+			}catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
-
-				while(rs.next()) {
-					System.out.println(rs.getString("NAME")+'\t'+
-							PriceConvert(rs.getInt("PRICE"))+"원");
-
+				
+				 try {
+					while(rs.next()) {
+					        System.out.println("-------------------------");
+					        System.out.println("|\t    메뉴판     \t|");
+					        System.out.println("|     "+ rs.getString("NAME") + "\t" +
+					        PriceConvert(rs.getInt("PRICE"))+"원" + "\t|");
+					        System.out.println("-------------------------");
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 				new OrderMain().execute();
@@ -818,24 +822,14 @@ public class FoodDAO {
 			case 2:  new SearchMain().execute();
 
 			case 3: new IndexMain().menu_user();
+			
 			}
-
-
-
-		}
-
-		catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(con != null) con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} 
-		}
 	}
+	}
+		
+
+	
+	
 	
 	public String PriceConvert(int args_price) {
 		String string_price = null;
