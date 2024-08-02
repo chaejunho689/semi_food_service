@@ -22,8 +22,8 @@ public class FoodDTO {
 		
 		private int food_code; 			// 음식 코드
 		private String food_name; 		// 음식 이름
-		private String food_price; 		// 음식 가격
-		private String food_kind; 		// 음식 종류
+		private int food_price; 		// 음식 가격
+		private int food_kind; 		// 음식 종류
 		
 		private int seq;
 		

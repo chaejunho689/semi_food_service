@@ -3,6 +3,7 @@ package food.service;
 import java.util.Scanner;
 
 import food.dao.FoodDAO;
+import food.main.IndexMain;
 
 public class MenuDeleteService implements Food {
 
@@ -14,6 +15,7 @@ public class MenuDeleteService implements Food {
 		String food_name = scan.nextLine();
 		
 		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
 		
 		boolean exist = foodDAO.isExistFoodName(food_name);
 		if (!exist) {
@@ -26,6 +28,7 @@ public class MenuDeleteService implements Food {
 	    int su= foodDAO.deleteFood(food_name);
 	    System.out.println();
 	    System.out.println("메뉴가 삭제되었습니다");
+	    indexMain.menu_admin();
 		
 	}
 
