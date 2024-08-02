@@ -8,7 +8,7 @@ public class SelectMain implements Food{
 		
 		//FoodDAO foodDAO = FoodDAO.getInstance();
 		
-		//foodDAO.ShowRes();
+		//foodDAO.ShowRes(); // add commit
 
 }
 }
