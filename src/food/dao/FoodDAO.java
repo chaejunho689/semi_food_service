@@ -858,7 +858,7 @@ public class FoodDAO {
 
 			String userId = session_id;
 
-
+			
 			PreparedStatement pstmt = con.prepareStatement(query);
 
 			pstmt.setString(1, userId);
@@ -867,10 +867,10 @@ public class FoodDAO {
 
 			rs = pstmt.executeQuery();
 
-
-			System.out.println(userId + "님의 주문 내역입니다.");
+			String username = session_name;
+			
+			System.out.println(username + "님의 주문 내역입니다.");
 			while (rs.next()) {
-				String id = rs.getString("ID");
 				String foodname = rs.getString("NAME");
 				int quantity = rs.getInt("QUANTITY");
 				String totalPrice = PriceConvert(rs.getInt("TOTALPRICE"));
@@ -878,8 +878,8 @@ public class FoodDAO {
 
 				orderDate = rs.getDate("ORDERDATE");
 
-				System.out.printf("이름: %s 코드: %s, 수량: %d, 총금액: %s, 주문일: %s%n",
-						id, foodname, quantity, totalPrice, orderDate);
+				System.out.printf("이름: %s 메뉴: %s, 수량: %d, 총금액: %s, 주문일: %s%n",
+						username, foodname, quantity, totalPrice, orderDate);
 			} // s=문자열,d=int열, f=double열,%s%n 날짜 문자열
 		}
 		catch (SQLException e)  {
