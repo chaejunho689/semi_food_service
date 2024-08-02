@@ -909,7 +909,7 @@ public class FoodDAO {
 	            }
 		}
 		catch (SQLException e)  {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block // 브랜치추가
 			e.printStackTrace();            
 		} 
 		return foodcode;
