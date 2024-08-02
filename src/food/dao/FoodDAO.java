@@ -1,11 +1,15 @@
 package food.dao;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,7 +21,7 @@ import food.service.SelectMain;
 
 public class FoodDAO {
 	private String driver = "oracle.jdbc.driver.OracleDriver";
-	private String url ="jdbc:oracle:thin:@localhost:1521:xe";
+	private String url ="jdbc:oracle:thin:@192.168.0.43:1521:xe";
 	private String username = "c##java";
 	private String password = "1234";
 
@@ -56,15 +60,28 @@ public class FoodDAO {
 	}
 
 	// 로그인 여부 체크 
-	// if(boardDAO.login_check() == false)	return; < 로그인 체크 필요시 이것 서비스에 넣어서 사용
+	// if(boardDAO.login_check() == false)   return; < 로그인 체크 필요시 이것 서비스에 넣어서 사용
 	public boolean common_logincheck() {
-		if(login_yn == false) {
-			System.out.println("로그인이 필요한 서비스입니다.");
-			return false;
-		}
-		//		System.out.println(session_name + "님 환영합니다.");
-		return true;
-	}
+	      
+	   //loginCallCheck FoodLoginService.java에서 common_logincheck를 호출했는지 여부 검사.
+	     StringWriter sw = new StringWriter();
+	     PrintWriter pw = new PrintWriter(sw);
+	     new Exception("Stack trace").printStackTrace(pw);
+	     String stackTrace = sw.toString();
+	     String a = "common_logincheck";
+	     boolean loginCallCheck = stackTrace.contains(a);
+	        
+	     if(loginCallCheck == true && login_yn == false) {
+	    	 return false;
+	        }
+	        else if(login_yn == false) {
+	         System.out.println("로그인이 필요한 서비스입니다.");
+	         return false;
+	      }
+	      //      System.out.println(session_name + "님 환영합니다.");
+	      return true;
+	   }
+	
 
 	public boolean common_isExistId(String id) {
 		boolean exist = false;
@@ -493,8 +510,8 @@ public class FoodDAO {
 			pstmt = con.prepareStatement(insertQuery);
 			pstmt.setInt(1, foodDTO.getFood_code());
 			pstmt.setString(2, foodDTO.getFood_name());
-			pstmt.setString(3, foodDTO.getFood_price());
-			pstmt.setString(4, foodDTO.getFood_kind());
+			pstmt.setInt(3, foodDTO.getFood_price());
+			pstmt.setInt(4, foodDTO.getFood_kind());
 			su = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -568,8 +585,8 @@ public class FoodDAO {
 			if (rs.next()) {
 				foodDTO = new FoodDTO();
 				foodDTO.setFood_name(rs.getString("NAME"));
-				foodDTO.setFood_price(rs.getString("PRICE"));
-				foodDTO.setFood_kind(rs.getString("KIND"));
+				foodDTO.setFood_price(rs.getInt("PRICE"));
+				foodDTO.setFood_kind(rs.getInt("KIND"));
 
 			}
 		} catch (SQLException e) {
@@ -913,6 +930,115 @@ public class FoodDAO {
 			e.printStackTrace();            
 		} 
 		return foodcode;
+	}
+
+	public List<FoodDTO> list() {
+		List<FoodDTO> foodList = new ArrayList<>();
+		getConnection();
+        String query = "SELECT * FROM FOOD_ACCOUNT";
+        try {
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                FoodDTO foodDTO = new FoodDTO();
+                foodDTO.setId(rs.getString("ID"));
+                foodDTO.setPwd(rs.getString("PWD"));
+                foodDTO.setName(rs.getString("NAME"));
+                foodDTO.setCode(rs.getInt("CODE"));
+                foodList.add(foodDTO);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return foodList;
+    }
+
+
+	public int deleteId(String id) {
+		int su = 0;
+		getConnection();
+		String deleteQuery = "delete from FOOD_ACCOUNT where ID=?";
+		try {
+			pstmt = con.prepareStatement(deleteQuery);
+			pstmt.setString(1, id);
+			su = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (con != null) con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+
+	public List<FoodDTO> res_list() {
+		List<FoodDTO> resList = new ArrayList<>();
+		getConnection();
+        String query = "SELECT * FROM RESTAURANT";
+        try {
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                FoodDTO foodDTO = new FoodDTO();
+                foodDTO.setRes_name(rs.getString("NAME"));
+                foodDTO.setRes_pnumber(rs.getString("PNUMBER"));
+                foodDTO.setRes_address(rs.getString("ADDRESS"));
+                foodDTO.setRes_kind(rs.getInt("KIND"));
+                resList.add(foodDTO);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resList;
+	}
+
+	public List<FoodDTO> menu_list() {
+		List<FoodDTO> menuList = new ArrayList<>();
+		getConnection();
+        String query = "SELECT * FROM FOODMENU";
+        try {
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                FoodDTO foodDTO = new FoodDTO();
+                foodDTO.setFood_name(rs.getString("NAME"));
+                foodDTO.setFood_price(rs.getInt("PRICE"));
+                foodDTO.setFood_kind(rs.getInt("KIND"));
+                menuList.add(foodDTO);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return menuList;
 	}
 
 
