@@ -1,6 +1,6 @@
 package food.service;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -9,70 +9,69 @@ import food.dao.FoodDAO;
 import food.main.IndexMain;
 
 public class OrderMain implements Food {
-	
-	@Override
+
+    @Override
     public void execute() {
         Scanner scan = new Scanner(System.in);
-		FoodDAO foodDAO = FoodDAO.getInstance();
+        FoodDAO foodDAO = FoodDAO.getInstance();
+        
+        int foodcode = 0;
         
         try {
-            foodDAO.showFoodMenu();
-
-            Map<Integer, Integer> orderDetails = new HashMap<>();
-            double totalPrice = 0;
+            Map<String, Integer> orderDetails = new HashMap<>();
+            int totalPrice = 0;
 
             boolean cont = true;
             while (cont) {
-                System.out.println("주문하실 음식의 코드를 입력해주세요!");
-                int foodCode = scan.nextInt();
-
+                System.out.println("주문하실 음식의 이름을 입력해주세요!");
+                String foodname = scan.nextLine(); 
+                
+                foodcode = foodDAO.getFoodCodeFromInput(foodname);
+                if(foodcode == 0) {
+                	System.out.println("일치하는 이름의 음식메뉴가 없습니다.");
+                	continue;
+                }
+                
+                
                 try {
-                    double price = foodDAO.getFoodPrice(foodCode);
+                    int price = foodDAO.getFoodPrice(foodname);
 
-                    System.out.println("몇개   주문하시겠어요?");
+                    System.out.println("몇개 주문하시겠어요?");
                     int quantity = scan.nextInt();
+                    scan.nextLine(); 
 
-                    double itemTotalPrice = price * quantity;
+                    int itemTotalPrice = price * quantity; 
                     totalPrice += itemTotalPrice;
 
-                    orderDetails.put(foodCode, quantity);
-
-                    System.out.println("최종금액은 " + (int) totalPrice + "원입니다");
+                    orderDetails.put(foodname, quantity);
+                    System.out.printf("현재까지의 총 금액은 %s원입니다%n", foodDAO.PriceConvert(totalPrice));
 
                     System.out.println("추가 주문 하시겠어요? (y/n)");
-                    scan.next(); 
                     String extra = scan.nextLine();
 
-                    cont = extra.equalsIgnoreCase("y"); //y 이외면 false while 문 탈출
+                    cont = extra.equalsIgnoreCase("y"); 
 
                 } catch (SQLException e) {
-                	e.printStackTrace();
-                    cont = false;
+                    System.out.println("주문 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+                    e.printStackTrace();
+                    cont = false; 
                 }
             }
            
-            
-            String userId = foodDAO.session_name;
-            
-        	//System.out.println(userId+ "님이 주문하였습니다.");
-            
-        	System.out.println(userId+ "님이 주문하였습니다.");
+            String userId = foodDAO.session_id;
+            System.out.println(userId + "님이 주문하였습니다.");
 
-        	foodDAO.saveOrder(userId, orderDetails, totalPrice);
+            foodDAO.saveOrder(userId, orderDetails, totalPrice, foodcode);
 
-            System.out.println("배달의민족 주문!");
-            System.out.println("결제하실금액은: " + (int) totalPrice + "원입니다");
-
-            //-------------------------------------------------------------------------
+            System.out.printf("배달의민족 주문! 결제하실 금액은 %s원입니다%n", foodDAO.PriceConvert(totalPrice));
 
             System.out.println();
             System.out.println("추가 주문을 원하시면 1번을 눌러주세요");
-            System.out.println();
-            System.out.println("다른식당을 이용하시려면 2번을 눌러주세요");
-            System.out.println();
+            System.out.println("다른 식당을 이용하시려면 2번을 눌러주세요");
             System.out.println("처음 화면으로 돌아가시려면 3번을 눌러주세요");
 
             int order = scan.nextInt();
+            scan.nextLine(); 
 
             switch (order) {
                 case 1:
@@ -84,9 +83,13 @@ public class OrderMain implements Food {
                 case 3:
                     new IndexMain().menu_user(); 
                     break;
+                default:
+                    System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
+                    new IndexMain().menu_user(); 
+                    break;
             }
         } finally {
-            scan.close();
+            scan.close(); 
         }
     }
 }

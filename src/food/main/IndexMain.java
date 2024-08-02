@@ -13,10 +13,12 @@ import food.service.FoodRegistService;
 import food.service.MenuAddService;
 import food.service.MenuDeleteService;
 import food.service.MenuEditService;
+import food.service.OrderInfo;
 import food.service.ResAddService;
 import food.service.ResDeleteService;
 import food.service.ResEditService;
 import food.service.SearchMain;
+import food.service.SelectMain;
 
 public class IndexMain {
 
@@ -82,19 +84,22 @@ public class IndexMain {
 			System.out.println("***********************");
 			System.out.println("1. 식당 검색");
 			System.out.println("2. 식당 목록 ");
-			System.out.println("3. 뒤로가기");
+			System.out.println("3. 주문내역 확인");
+			System.out.println("4. 뒤로가기");
 			System.out.println("***********************");
-			System.out.print("메뉴입력 :");
+			System.out.print(" 번호 :");
 			num = scan.nextInt();
 			
 			if(num == 1) {
-				food = new SearchMain();
+				food  = new SearchMain();
 			} else if(num == 2) {
-				menu();
+				food  = new SelectMain();
 			} else if(num == 3) {
-				menu();
+				food = new OrderInfo();
+			} else if(num == 4) {
+				return;
 			}
-			food.execute();;
+			food.execute();
 		}
 	}
 	
