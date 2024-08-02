@@ -3,6 +3,7 @@ package food.main;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import food.dao.FoodDAO;
 import food.service.AdminFoodMenu;
 import food.service.AdminMemberMenu;
 import food.service.AdminResMenu;
@@ -32,6 +33,9 @@ public class IndexMain {
 		int num;
 		Food food = null;
 		
+		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
+		
 		while(true) {
 			System.out.println();
 			System.out.println("***********************");
@@ -40,13 +44,21 @@ public class IndexMain {
 			System.out.println("3. 로그아웃 ");
 			System.out.println("4. 회원정보수정 ");
 			System.out.println("5. 회원탈퇴 ");
-			System.out.println("6. 프로그램 종료 ");
+			if(foodDAO.session_id != null) {
+				if(foodDAO.common_adminYn() == true) {
+					System.out.println("6. 사용자 메뉴 접속");
+					System.out.println("7. 관리자 메뉴 접속");
+				} else {
+					System.out.println("6. 사용자 메뉴 접속");
+				}
+			}
+			System.out.println("0. 프로그램 종료 ");
 			System.out.println("***********************");
 			System.out.print("메뉴입력 : ");
 			
 			try {
 				num = scan.nextInt();
-				if(num < 1 || num > 6) {
+				if(num < 0 || num > 7) {
 					continue;
 				}
 			} catch (InputMismatchException e) {
@@ -55,9 +67,20 @@ public class IndexMain {
                 continue; // 잘못된 입력인 경우 루프를 계속
 			}
 			
-            if (num == 6) break; // 프로그램 종료
+            if (num == 0) break; // 프로그램 종료
 
-			switch(num) {
+            switch(num) {
+			case 6 :
+				indexMain.menu_user();
+				break;
+			case 7 :
+				if(foodDAO.common_adminYn() == true) {
+					indexMain.menu_admin();
+					System.out.println("debugs");
+				} else {
+					System.out.println("권한이 없습니다.");
+				}
+				break;
 			case 1 :
 				food = new FoodRegistService();
 				break;
@@ -113,8 +136,9 @@ public class IndexMain {
 				food = new OrderInfo();
 				break;
 			case 3 :
-				return;
-		
+				IndexMain indexMain = new IndexMain();
+				indexMain.menu();
+				break;
 			}
 			food.execute();
 		}
