@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import food.bean.FoodDTO;
 import food.dao.FoodDAO;
+import food.main.IndexMain;
 
 public class ResAddService implements Food {
 
@@ -23,6 +24,7 @@ public class ResAddService implements Food {
 		
 		FoodDTO foodDTO = new FoodDTO();
 		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
 		
 		int res_code = foodDAO.getRes_code(foodDTO);
 		foodDTO.setRes_code(res_code);
@@ -35,6 +37,7 @@ public class ResAddService implements Food {
 	    int su= foodDAO.addRes(foodDTO);
 	    System.out.println();
 	    System.out.println("신규 식당이 추가되었습니다");
+	    indexMain.menu_admin();
 		
 	}
 

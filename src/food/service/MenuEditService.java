@@ -1,22 +1,39 @@
 package food.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import food.bean.FoodDTO;
 import food.dao.FoodDAO;
+import food.main.IndexMain;
 
 public class MenuEditService implements Food {
 
 	@Override
 	public void execute() {
+		FoodDAO foodDAO = FoodDAO.getInstance();
+	    List<FoodDTO> menuList = foodDAO.menu_list();
+	       
+	       System.out.println();
+	       System.out.println("--------------------------------");
+	       System.out.printf("%-10s %-10s %-10s%n", "NAME", "PRICE", "KIND");
+	       System.out.println("--------------------------------");
+	       
+	       for (FoodDTO foodDTO : menuList) {
+	           System.out.printf("%-10s %-10s %-10d%n",
+	                   foodDTO.getFood_name(),
+	                   foodDTO.getFood_price(),
+	                   foodDTO.getFood_kind());
+	       }
+	       
 		Scanner scan = new Scanner(System.in);
 		System.out.println();
-		System.out.print("메뉴 이름 검색 : ");
+		System.out.print("수정 원하는 메뉴 이름 검색 : ");
 		String food_name = scan.nextLine();
 		
-		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
 		FoodDTO foodDTO = foodDAO.getFoodName(food_name);
 		String oldFood_Name = food_name;
 		
@@ -28,23 +45,26 @@ public class MenuEditService implements Food {
 		
 		System.out.println(foodDTO);
 		System.out.println();
-		System.out.print("수정 메뉴 이름 입력 : ");
+		System.out.print("수정할 이름 입력 : ");
 		String newFood_Name = scan.nextLine();
-		System.out.print("수정할 메뉴 가격 입력 : ");
-		String food_price = scan.nextLine();
-		System.out.print("수정할 메뉴 종류 입력 : ");
-		String food_kind = scan.nextLine();
+		System.out.print("수정할 가격 입력 : ");
+		int food_price = scan.nextInt();
+		scan.nextLine();
+		System.out.print("수정할 종류 입력 (예시: 한식(1), 양식(2), 중식(3), 일식(4)) : ");
+		int food_kind = scan.nextInt();
+		scan.nextLine();
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("NAME", newFood_Name);
-		map.put("PRICE", food_price);
-		map.put("KIND", food_kind);
+		map.put("PRICE", String.valueOf(food_price));
+		map.put("KIND", String.valueOf(food_kind));
 		map.put("NAME2", oldFood_Name);
 	
 		int su = foodDAO.updateFood(map);
 		
 		System.out.println();
 		System.out.println("메뉴 정보가 수정되었습니다");
+		indexMain.menu_admin();
 		
 	}
 

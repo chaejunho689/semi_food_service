@@ -3,6 +3,7 @@ package food.service;
 import java.util.Scanner;
 
 import food.dao.FoodDAO;
+import food.main.IndexMain;
 
 public class ResDeleteService implements Food {
 
@@ -14,6 +15,7 @@ public class ResDeleteService implements Food {
 		String res_name = scan.nextLine();
 		
 		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
 		
 		boolean exist = foodDAO.isExistResName(res_name);
 		if (!exist) {
@@ -26,6 +28,7 @@ public class ResDeleteService implements Food {
 	    int su= foodDAO.deleteRes(res_name);
 	    System.out.println();
 	    System.out.println("식당이 삭제되었습니다");
+	    indexMain.menu_admin();
 	}
 
 }

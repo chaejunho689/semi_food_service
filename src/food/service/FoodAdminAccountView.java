@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import food.bean.FoodDTO;
 import food.dao.FoodDAO;
+import food.main.IndexMain;
 
 public class FoodAdminAccountView implements Food {
 
@@ -13,6 +14,7 @@ public class FoodAdminAccountView implements Food {
 	public void execute() {
 		Scanner scan = new Scanner(System.in);
 		FoodDAO foodDAO = FoodDAO.getInstance();
+		IndexMain indexMain = new IndexMain();
 	       List<FoodDTO> foodList = foodDAO.list();
 	       
 	       System.out.println();
@@ -35,6 +37,7 @@ public class FoodAdminAccountView implements Food {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	        indexMain.menu_admin();
 	}
 
 }
