@@ -21,6 +21,11 @@ public class FoodAccountDelete implements Food {
 				return;
 			}
 			
+	        if(foodDAO.common_adminYn() == true) {
+	            System.out.println("관리자 계정은 탈퇴 할 수 없습니다.");
+	            return;
+	        }
+			
 			System.out.println("인증을 위해 아이디를 입력하세요.");
 			String id = scan.next();
 			

@@ -708,7 +708,7 @@ public class FoodDAO {
 		System.out.println("************************");
 		System.out.println("식당 목록을 보여드립니다");
 		System.out.println("************************");
-		System.out.println("식당코드"+"\t"+"식당명"+"\t"+"전화번호"+"\t"+"\t"+"위치" +"\t"+ "\t" +"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)");
+		System.out.println("식당코드"+"\t"+"식당명"+"\t"+"전화번호"+"\t"+"\t"+"위치" +"\t" +"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)");
 
 		String sql = "select * from RESTAURANT";
 		try {
