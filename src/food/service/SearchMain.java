@@ -17,7 +17,7 @@ public class SearchMain implements Food {
 		
 		FoodDAO foodDAO = FoodDAO.getInstance();
 		
-		
+		foodDAO.ShowRes();
 		foodDAO.SearchRes();
 	}
 	

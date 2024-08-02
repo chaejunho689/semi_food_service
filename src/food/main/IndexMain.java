@@ -88,21 +88,33 @@ public class IndexMain {
 			System.out.println();
 			System.out.println("***********************");
 			System.out.println("1. 식당 검색");
-			System.out.println("2. 식당 목록 ");
-			System.out.println("3. 주문내역 확인");
-			System.out.println("4. 뒤로가기");
+			System.out.println("2. 주문내역 확인");
+			System.out.println("3. 회원메뉴");
 			System.out.println("***********************");
 			System.out.print(" 번호 :");
-			num = scan.nextInt();
 			
-			if(num == 1) {
-				food  = new SearchMain();
-			} else if(num == 2) {
-				food  = new SelectMain();
-			} else if(num == 3) {
+			try {
+				num = scan.nextInt();
+				if(num < 1 || num > 3) {
+					continue;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("숫자만 입력하세요.");
+                scan.next(); // 잘못된 입력을 읽어들이고 다음 입력을 기다리게 함
+                continue; // 잘못된 입력인 경우 루프를 계속
+			}
+			
+			
+			switch(num) {
+			case 1 :
+				food = new SearchMain();
+				break;
+			case 2 :
 				food = new OrderInfo();
-			} else if(num == 4) {
+				break;
+			case 3 :
 				return;
+		
 			}
 			food.execute();
 		}
