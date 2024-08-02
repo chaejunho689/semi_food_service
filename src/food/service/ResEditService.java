@@ -1,6 +1,7 @@
 package food.service;
 
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -45,7 +46,6 @@ public class ResEditService implements Food {
 			return;
 		}
 		
-		System.out.println(foodDTO);
 		System.out.println();
 		System.out.print("수정할 이름 입력 : ");
 		String newRes_Name = scan.nextLine();
@@ -53,9 +53,25 @@ public class ResEditService implements Food {
 		String res_address = scan.nextLine();
 		System.out.print("수정할 휴대폰번호 입력 (예시:010-1234-5678) : ");
 		String res_pnumber = scan.nextLine();
-		System.out.println("수정할 종류 정보 입력 (예시: 한식(1), 양식(2), 중식(3), 일식(4)) : ");
-		int res_kind = scan.nextInt();
-		scan.nextLine();
+		int res_kind = 0;
+		boolean validInput = false;
+		while (!validInput) {
+			System.out.print("식당 종류 입력 (예시: 한식(1), 양식(2), 중식(3), 일식(4)) : ");
+			try {
+				res_kind = Integer.parseInt(scan.nextLine());
+				if (res_kind >= 1 && res_kind <= 4) {
+					validInput = true;
+				} else {
+					System.out.println();
+					System.out.println("1~4 사이의 숫자를 입력하세요!");
+				}
+			} catch (NumberFormatException e) {
+				System.out.println();
+				System.out.println("숫자만 입력하세요!");
+			}
+		}
+
+		
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("NAME", newRes_Name);

@@ -123,10 +123,24 @@ public class IndexMain {
 			System.out.println("4. 뒤로가기 ");
 			System.out.println("***********************");
 			System.out.print("   번호 : ");
-			num = scan.nextInt();
+			try {
+				num = scan.nextInt();
+				if(num < 1 || num > 4) {
+					System.out.println();
+					System.out.println("1 ~ 4 사이의 숫자를 입력하세요");
+					continue;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println();
+				System.out.println("숫자만 입력하세요!");
+                scan.next(); // 잘못된 입력을 읽어들이고 다음 입력을 기다리게 함
+                continue; // 잘못된 입력인 경우 루프를 계속
+			}
 			while (true) {
-				if(num == 4) return;
-				else if(num == 1) {
+				if(num == 4) {
+					IndexMain indexMain = new IndexMain();
+					indexMain.menu();
+				} else if(num == 1) {
 					food = new AdminResMenu();
 					food.execute();
 				} else if(num == 2) {
@@ -137,8 +151,8 @@ public class IndexMain {
 					food.execute();
 				} else {
 					System.out.println();
-					System.out.println("1 ~ 4 사이의 숫자를 입력하세요");
 				}
+				
 			}
 		}
 	}

@@ -43,16 +43,45 @@ public class MenuEditService implements Food {
 			return;
 		}
 		
-		System.out.println(foodDTO);
 		System.out.println();
 		System.out.print("수정할 이름 입력 : ");
 		String newFood_Name = scan.nextLine();
-		System.out.print("수정할 가격 입력 : ");
-		int food_price = scan.nextInt();
-		scan.nextLine();
-		System.out.print("수정할 종류 입력 (예시: 한식(1), 양식(2), 중식(3), 일식(4)) : ");
-		int food_kind = scan.nextInt();
-		scan.nextLine();
+	
+		int food_price = 0;
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.print("수정할 가격 입력 (최대 100만원) : ");
+            try {
+                food_price = Integer.parseInt(scan.nextLine());
+                if (food_price >= 0 && food_price <= 1000000) {
+                    validInput = true;
+                } else {
+                    System.out.println();
+                    System.out.println("100만원 미만으로 입력하세요!");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println();
+                System.out.println("숫자만 입력하세요!");
+            }
+        }
+		
+        int food_kind = 0;
+		boolean validInput2 = false;
+		while (!validInput2) {
+			System.out.print("음식 종류 입력 (예시: 한식(1), 양식(2), 중식(3), 일식(4)) : ");
+			try {
+				food_kind = Integer.parseInt(scan.nextLine());
+				if (food_kind >= 1 && food_kind <= 4) {
+					validInput2 = true;
+				} else {
+					System.out.println();
+					System.out.println("1~4 사이의 숫자를 입력하세요!");
+				}
+			} catch (NumberFormatException e) {
+				System.out.println();
+				System.out.println("숫자만 입력하세요!");
+			}
+		}
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("NAME", newFood_Name);
