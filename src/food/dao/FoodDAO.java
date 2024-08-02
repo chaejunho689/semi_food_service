@@ -677,8 +677,8 @@ public class FoodDAO {
 	}
 
 	public void saveOrder(String userId, Map<String, Integer> orderDetails, double totalPrice, int foodcode) {
-		String query = "INSERT INTO ORDERS (ID, CODE, QUANTITY, TOTALPRICE, ORDERDATE) "
-				+ "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)"; 
+		String query = "INSERT INTO ORDERS (ORDERID, ID, CODE, QUANTITY, TOTALPRICE, ORDERDATE) "
+				+ "VALUES (FOOD_SEQUENCE.NEXTVAL ,?, ?, ?, ?, CURRENT_TIMESTAMP)"; 
 
 		try (PreparedStatement pstmt = con.prepareStatement(query)) {
 			for (Map.Entry<String, Integer> entry : orderDetails.entrySet()) {
