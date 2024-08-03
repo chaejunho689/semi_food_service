@@ -17,12 +17,12 @@ public class MenuEditService implements Food {
 	    List<FoodDTO> menuList = foodDAO.menu_list();
 	       
 	       System.out.println();
-	       System.out.println("--------------------------------");
-	       System.out.printf("%-10s %-10s %-10s%n", "NAME", "PRICE", "KIND");
-	       System.out.println("--------------------------------");
+	       System.out.println("--------------------------------------");
+	       System.out.printf("%-7s \t %-7s \t %-5s%n", "NAME", "PRICE", "KIND");
+	       System.out.println("--------------------------------------");
 	       
 	       for (FoodDTO foodDTO : menuList) {
-	           System.out.printf("%-10s %-10s %-10d%n",
+	           System.out.printf("%-7s \t %-9d \t %-5d%n",
 	                   foodDTO.getFood_name(),
 	                   foodDTO.getFood_price(),
 	                   foodDTO.getFood_kind());
@@ -30,8 +30,13 @@ public class MenuEditService implements Food {
 	       
 		Scanner scan = new Scanner(System.in);
 		System.out.println();
-		System.out.print("수정 원하는 메뉴 이름 검색 : ");
+		System.out.print("수정 원하는 메뉴 이름 검색 (뒤로가기를 원하시면 '수정없음'을 입력하세요) : ");
 		String food_name = scan.nextLine();
+		 if(food_name.equals("수정없음")) {
+	    	   AdminFoodMenu adminFoodMenu = new AdminFoodMenu();
+	    	   return;
+	       }
+		
 		
 		IndexMain indexMain = new IndexMain();
 		FoodDTO foodDTO = foodDAO.getFoodName(food_name);

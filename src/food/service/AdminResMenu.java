@@ -15,13 +15,14 @@ public class AdminResMenu implements Food {
 		
 		while(true) {
 			System.out.println();
-			System.out.println("***********************");
-			System.out.println("1. 신규 식당 추가 ");
-			System.out.println("2. 식당 정보 보기/수정 ");
-			System.out.println("3. 식당 정보 삭제 ");
-			System.out.println("4. 뒤로가기");
-			System.out.println("***********************");
-			System.out.print("   번호 : ");
+			System.out.println("┌───────────────────────────────┐");
+			System.out.println("│ \t식당 추가 및 수정/삭제 \t│");
+			System.out.println("│ 1. 신규 식당 추가 \t\t│");
+			System.out.println("│ 2. 식당 정보 보기/수정 \t\t│");
+			System.out.println("│ 3. 식당 정보 삭제 \t\t│");
+			System.out.println("│ 4. 뒤로가기 \t\t\t│");
+			System.out.println("└───────────────────────────────┘");
+			System.out.print("메뉴 번호 입력 : ");
 			
 			try {
 				num = scan.nextInt();

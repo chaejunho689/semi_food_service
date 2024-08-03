@@ -19,32 +19,37 @@ public class ResEditService implements Food {
 	    List<FoodDTO> resList = foodDAO.res_list();
 	       
 	       System.out.println();
-	       System.out.println("------------------------------------------------------------------");
-	       System.out.printf("%-10s %-20s %-20s %-10s%n", "NAME", "PNUMBER", "ADDRESS", "KIND");
-	       System.out.println("------------------------------------------------------------------");
+	       System.out.println("-----------------------------------------------");
+	       System.out.printf("%-10s %-17s %-11s %-10s%n", "NAME", "PNUMBER", "ADDRESS", "KIND");
+	       System.out.println("-----------------------------------------------");
 	       
 	       for (FoodDTO foodDTO : resList) {
-	           System.out.printf("%-10s %-20s %-20s %-10d%n",
+	           System.out.printf("%-8s %-17s %-10s %-10d%n",
 	                   foodDTO.getRes_name(),
 	                   foodDTO.getRes_pnumber(),
 	                   foodDTO.getRes_address(),
 	                   foodDTO.getRes_kind());
 	       }
-	       
-		Scanner scan = new Scanner(System.in);
-		System.out.println();
-		System.out.print("수정 원하는 식당 이름 입력 : ");
-		String res_name = scan.nextLine();
-		
-		IndexMain indexMain = new IndexMain();
-		FoodDTO foodDTO = foodDAO.getResName(res_name);
-		String oldRes_Name = res_name;
-		
-		if(foodDTO == null) {
-			System.out.println();
-			System.out.println("검색하신 식당이 존재하지 않습니다");
-			return;
-		}
+
+	       Scanner scan = new Scanner(System.in);
+	       System.out.println();
+	       System.out.print("수정 원하는 식당 이름 입력 (뒤로가기를 원하시면 '수정없음'을 입력하세요) : ");
+	       String res_name = scan.nextLine();
+	       if(res_name.equals("수정없음")) {
+	    	   AdminResMenu adminResMenu = new AdminResMenu();
+	    	   return;
+	       }
+
+	       IndexMain indexMain = new IndexMain();
+	       FoodDTO foodDTO = foodDAO.getResName(res_name);
+	       String oldRes_Name = res_name;
+
+	       if(foodDTO == null) {
+	    	   System.out.println();
+	    	   System.out.println("검색하신 식당이 존재하지 않습니다");
+	    	   return;
+	       }
+
 		
 		System.out.println();
 		System.out.print("수정할 이름 입력 : ");

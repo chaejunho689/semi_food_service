@@ -12,7 +12,10 @@ public class FoodRegistService implements Food {
 		FoodDAO foodDAO = FoodDAO.getInstance();
 		
 		
-		foodDAO.login_logout();
+		if(foodDAO.common_logincheck() == true) {
+			System.out.println("이미 로그인 상태입니다. 먼저 로그아웃 해주세요.");
+			return;
+		}
 		
 		while(true) {
 			System.out.println("회원가입 할 아이디를 입력하세요.");

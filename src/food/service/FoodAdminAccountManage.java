@@ -29,18 +29,14 @@ public class FoodAdminAccountManage implements Food {
 				System.out.println();
 				return;
 			} else {
-				if(foodDAO.common_adminYn() == true) {
-					System.out.println("관리자 계정은 삭제할 수 없습니다");
-					return;
-				} else {
-					int su= foodDAO.deleteId(id);
-					System.out.println();
-					System.out.println("해당 회원 정보가 삭제되었습니다");
-					indexMain.menu_admin();
-					break;
-				}
+				int su= foodDAO.deleteId(id);
+				System.out.println();
+				System.out.println("해당 회원 정보가 삭제되었습니다");
+				indexMain.menu_admin();
+				break;
 			}
 		}
 	}
 }
+
 
