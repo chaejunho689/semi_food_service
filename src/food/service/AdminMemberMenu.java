@@ -15,13 +15,14 @@ public class AdminMemberMenu implements Food {
 		
 		while(true) {
 			System.out.println();
-			System.out.println("***********************");
-			System.out.println("1. 모든 회원 보기 ");
-			System.out.println("2. 회원 계정 삭제 ");
-			System.out.println("3. 회원 관리자 기능 부여 ");
-			System.out.println("4. 뒤로가기 ");
-			System.out.println("***********************");
-			System.out.print("   번호 : ");
+			System.out.println("┌───────────────────────────────┐");
+			System.out.println("│ \t    회원 관리 \t        │");
+			System.out.println("│ 1. 모든 회원 보기 \t\t│");
+			System.out.println("│ 2. 회원 계정 삭제 \t\t│");
+			System.out.println("│ 3. 회원 관리자 기능 부여 \t\t│");
+			System.out.println("│ 4. 뒤로가기 \t\t\t│");
+			System.out.println("└───────────────────────────────┘");
+			System.out.print("메뉴 번호 입력 : ");
 			
 			try {
 				num = scan.nextInt();

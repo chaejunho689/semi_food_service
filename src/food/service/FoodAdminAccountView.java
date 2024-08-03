@@ -18,12 +18,12 @@ public class FoodAdminAccountView implements Food {
 	       List<FoodDTO> foodList = foodDAO.list();
 	       
 	       System.out.println();
-	       System.out.println("-------------------------------------");
-	       System.out.printf("%-10s %-10s %-10s %-10s%n", "ID", "PWD", "NAME", "CODE");
-	       System.out.println("-------------------------------------");
+	       System.out.println("---------------------------------------------------------");
+	       System.out.printf("%-10s \t %-10s \t %-10s \t %-10s%n", "ID", "PWD", "NAME", "CODE");
+	       System.out.println("---------------------------------------------------------");
 	       
 	       for (FoodDTO foodDTO : foodList) {
-	           System.out.printf("%-10s %-10s %-10s %-10d%n",
+	           System.out.printf("%-10s \t %-10s \t %-10s \t %-10d%n",
 	                   foodDTO.getId(),
 	                   foodDTO.getPwd(),
 	                   foodDTO.getName(),
