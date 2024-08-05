@@ -63,26 +63,26 @@ public class FoodDAO {
 	// 로그인 여부 체크 
 	// if(boardDAO.login_check() == false)   return; < 로그인 체크 필요시 이것 서비스에 넣어서 사용
 	public boolean common_logincheck() {
-	      
-	   //loginCallCheck FoodLoginService.java에서 common_logincheck를 호출했는지 여부 검사.
-	     StringWriter sw = new StringWriter();
-	     PrintWriter pw = new PrintWriter(sw);
-	     new Exception("Stack trace").printStackTrace(pw);
-	     String stackTrace = sw.toString();
-	     String a = "common_logincheck";
-	     boolean loginCallCheck = stackTrace.contains(a);
-	        
-	     if(loginCallCheck == true && login_yn == false) {
-	    	 return false;
-	        }
-	        else if(login_yn == false) {
-	         System.out.println("로그인이 필요한 서비스입니다.");
-	         return false;
-	      }
-	      //      System.out.println(session_name + "님 환영합니다.");
-	      return true;
-	   }
-	
+
+		//loginCallCheck FoodLoginService.java에서 common_logincheck를 호출했는지 여부 검사.
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		new Exception("Stack trace").printStackTrace(pw);
+		String stackTrace = sw.toString();
+		String a = "common_logincheck";
+		boolean loginCallCheck = stackTrace.contains(a);
+
+		if(loginCallCheck == true && login_yn == false) {
+			return false;
+		}
+		else if(login_yn == false) {
+			System.out.println("로그인이 필요한 서비스입니다.");
+			return false;
+		}
+		//      System.out.println(session_name + "님 환영합니다.");
+		return true;
+	}
+
 
 	public boolean common_isExistId(String id) {
 		boolean exist = false;
@@ -710,7 +710,7 @@ public class FoodDAO {
 		System.out.println("│\t\t주변 맛집 리스트\t\t\t│");
 		System.out.println("│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│");
 		System.out.println("│ 식당명"+"\t\t"+"전화번호"+"\t"+"\t"+"\t"+"위치"
-//		+"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)"
+				//		+"분류코드(1. 한식, 2. 중식, 3. 양식, 4. 양식)"
 				+ "\t" + "│");
 
 		String sql = "select * from RESTAURANT";
@@ -721,14 +721,14 @@ public class FoodDAO {
 
 			while(rs.next()) {
 				System.out.println(
-//						rs.getString("CODE") + "\t"
+						//						rs.getString("CODE") + "\t"
 						"│ "
 						+ rs.getString("NAME") + "\t" 
 						+ rs.getString("PNUMBER") + "\t\t"
 						+ rs.getString("ADDRESS")
 						+ "\t│"
 						);
-//						+ rs.getString("KIND"));
+				//						+ rs.getString("KIND"));
 
 			}//while
 			System.out.println("└───────────────────────────────────────────────┘");
@@ -751,61 +751,61 @@ public class FoodDAO {
 		getConnection();//접속
 
 
-			Scanner scan = new Scanner(System.in);
+		Scanner scan = new Scanner(System.in);
 
-			System.out.println("*************************************************");
+		System.out.println("*************************************************");
 
 
-			System.out.println("식당 이름을 입력하세요 ⤵ ");	
+		System.out.println("식당 이름을 입력하세요 ⤵ ");	
 
-			String code = scan.next();  // 조인문으로 변경
+		String code = scan.next();  // 조인문으로 변경
 
-			String sql2 = "SELECT CODE, NAME FROM RESTAURANT WHERE NAME LIKE ? AND ROWNUM = 1";
-			try {
-				pstmt = con.prepareStatement(sql2);
-				pstmt.setString(1, '%' + code + '%');
-				rs = pstmt.executeQuery(); //실행
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String sql2 = "SELECT CODE, NAME FROM RESTAURANT WHERE NAME LIKE ? AND ROWNUM = 1";
+		try {
+			pstmt = con.prepareStatement(sql2);
+			pstmt.setString(1, '%' + code + '%');
+			rs = pstmt.executeQuery(); //실행
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		int rest_code = 0;
+		String rest_name = " ";
+		try {
+			while(rs.next()) {
+				rest_code = rs.getInt("CODE");
+				rest_name = rs.getString("NAME");
 			}
-			
-			int rest_code = 0;
-			String rest_name = " ";
-			try {
-				while(rs.next()) {
-					rest_code = rs.getInt("CODE");
-					rest_name = rs.getString("NAME");
-				}
-			} catch (SQLException e) {
+		} catch (SQLException e) {
+		}
+
+		String sql3 = "SELECT F.NAME AS NAME, F.PRICE, F.CODE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE R.CODE = ? ";
+
+		try {
+			pstmt = con.prepareStatement(sql3);
+			pstmt.setInt(1, rest_code);
+			rs = pstmt.executeQuery(); //실행
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			System.out.println("┌───────────────────────────────┐");
+			System.out.println("│\t     " + rest_name + "\t\t│");
+			System.out.println("│\t    - 메뉴판 - \t\t│");
+			while(rs.next()) {
+				System.out.println("│\t"+ rs.getString("NAME") + "\t" +
+						PriceConvert(rs.getInt("PRICE"))+"원" + "\t\t│");
 			}
-			
-			String sql3 = "SELECT F.NAME AS NAME, F.PRICE, F.CODE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE R.CODE = ? ";
+			System.out.println("│\t\t\t\t│");
+			System.out.println("└───────────────────────────────┘");
 
-			try {
-				pstmt = con.prepareStatement(sql3);
-				pstmt.setInt(1, rest_code);
-				rs = pstmt.executeQuery(); //실행
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 
-			try {
-			    System.out.println("┌───────────────────────────────┐");
-			    System.out.println("│\t     " + rest_name + "\t\t│");
-			    System.out.println("│\t    - 메뉴판 - \t\t│");
-				while(rs.next()) {
-				    System.out.println("│\t"+ rs.getString("NAME") + "\t" +
-				    PriceConvert(rs.getInt("PRICE"))+"원" + "\t\t│");
-				}
-				System.out.println("│\t\t\t\t│");
-			    System.out.println("└───────────────────────────────┘");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//while
 
-			
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}//while
-			
 		while(true) {
 			System.out.println();
 			System.out.println("주문을 원하시면 1번을 눌러주세요");
@@ -813,11 +813,11 @@ public class FoodDAO {
 			System.out.println("다른식당을 이용하시려면 2번을 눌러주세요");
 			System.out.println();
 			System.out.println("처음 화면으로 돌아가시려면 3번을 눌러주세요");
-			
+
 			int order;
-			
-			
-			
+
+
+
 			try {
 				order =scan.nextInt();
 				if(order < 1 || order > 3) {
@@ -825,8 +825,8 @@ public class FoodDAO {
 				}
 			} catch (InputMismatchException e) {
 				System.out.println("숫자만 입력하세요.");
-                scan.next(); // 잘못된 입력을 읽어들이고 다음 입력을 기다리게 함
-                continue; // 잘못된 입력인 경우 루프를 계속
+				scan.next(); // 잘못된 입력을 읽어들이고 다음 입력을 기다리게 함
+				continue; // 잘못된 입력인 경우 루프를 계속
 			}
 
 			switch(order){
@@ -842,17 +842,17 @@ public class FoodDAO {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
+
 				try {
-				    System.out.println("┌───────────────────────────────┐");
-				    System.out.println("│\t     " + rest_name + "\t\t│");
-				    System.out.println("│\t    - 메뉴판 - \t\t│");
+					System.out.println("┌───────────────────────────────┐");
+					System.out.println("│\t     " + rest_name + "\t\t│");
+					System.out.println("│\t    - 메뉴판 - \t\t│");
 					while(rs.next()) {
-					    System.out.println("│\t"+ rs.getString("NAME") + "\t" +
-					    PriceConvert(rs.getInt("PRICE"))+"원" + "\t\t│");
+						System.out.println("│\t"+ rs.getString("NAME") + "\t" +
+								PriceConvert(rs.getInt("PRICE"))+"원" + "\t\t│");
 					}
 					System.out.println("│\t\t\t\t│");
-				    System.out.println("└───────────────────────────────┘");
+					System.out.println("└───────────────────────────────┘");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -864,84 +864,81 @@ public class FoodDAO {
 			case 2:  new SearchMain().execute();
 
 			case 3: new IndexMain().menu_user();
-			
-			}
-	}
-	}
-		
 
-	
-	
-	
+			}
+		}
+	}
+
+
+
+
+
 	public String PriceConvert(int args_price) {
 		String string_price = null;
 		DecimalFormat df = new DecimalFormat("###,###");
-		
+
 		string_price = df.format(args_price);
-			
+
 		return string_price;
 	}
 
-
-
 	public void OrderInfoDB() {
 
-		getConnection();//접속
+		getConnection(); // 접속
 
-		String query = "SELECT O.ID, F.NAME, O.QUANTITY, O.TOTALPRICE, O.ORDERDATE FROM ORDERS O JOIN FOODMENU F ON  O.CODE = F.CODE WHERE  O.ID = ?";
+		String query = "SELECT O.ID, F.NAME, O.QUANTITY, O.TOTALPRICE, O.ORDERDATE " +
+				"FROM ORDERS O " +
+				"JOIN FOODMENU F ON O.CODE = F.CODE " +
+				"WHERE O.ID = ? " +
+				"ORDER BY O.ORDERDATE DESC";
 		try {
 
 			String userId = session_id;
 
-			
 			PreparedStatement pstmt = con.prepareStatement(query);
-			
 			pstmt.setString(1, userId);
 
-			ResultSet rs;
-
-			rs = pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery();
 
 			String username = session_name;
-			
+
 			System.out.println(username + "님의 주문 내역입니다.");
 			while (rs.next()) {
 				String foodname = rs.getString("NAME");
 				int quantity = rs.getInt("QUANTITY");
 				String totalPrice = PriceConvert(rs.getInt("TOTALPRICE"));
-				java.sql.Date orderDate;
-
-				orderDate = rs.getDate("ORDERDATE");
+				java.sql.Date orderDate = rs.getDate("ORDERDATE");
 
 				System.out.printf("이름: %s 메뉴: %s, 수량: %d, 총금액: %s, 주문일: %s%n",
 						username, foodname, quantity, totalPrice, orderDate);
-			} // s=문자열,d=int열, f=double열,%s%n 날짜 문자열
+			}
 		}
-		catch (SQLException e)  {
-			// TODO Auto-generated catch block
-			e.printStackTrace();            
+		catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
-	
+
+
+
 	public int getFoodCodeFromInput(String foodname) {
 		int foodcode = 0;
-		
+
 		getConnection();//접속
 
 		String query = "SELECT F.CODE FROM FOODMENU F JOIN RESTAURANT R ON F.KIND = R.KIND WHERE F.NAME LIKE ?";
 
 		try {
-			 PreparedStatement pstmt = con.prepareStatement(query);
-	            pstmt.setString(1, '%' + foodname + '%');
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, '%' + foodname + '%');
 
-	            ResultSet rs = pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery();
 
-	            // Check if any result exists
-	            if (rs.next()) {
-	                foodcode = rs.getInt("CODE");
-	            } else {
-//	                System.out.println("일치하는 이름의 음식메뉴가 없습니다.");
-	            }
+			// Check if any result exists
+			if (rs.next()) {
+				foodcode = rs.getInt("CODE");
+			} else {
+				//	                System.out.println("일치하는 이름의 음식메뉴가 없습니다.");
+			}
 		}
 		catch (SQLException e)  {
 			// TODO Auto-generated catch block // 브랜치추가 // MERGE테스트
@@ -953,31 +950,31 @@ public class FoodDAO {
 	public List<FoodDTO> list() {
 		List<FoodDTO> foodList = new ArrayList<>();
 		getConnection();
-        String query = "SELECT * FROM FOOD_ACCOUNT";
-        try {
-            pstmt = con.prepareStatement(query);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                FoodDTO foodDTO = new FoodDTO();
-                foodDTO.setId(rs.getString("ID"));
-                foodDTO.setPwd(rs.getString("PWD"));
-                foodDTO.setName(rs.getString("NAME"));
-                foodDTO.setCode(rs.getInt("CODE"));
-                foodList.add(foodDTO);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+		String query = "SELECT * FROM FOOD_ACCOUNT";
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FoodDTO foodDTO = new FoodDTO();
+				foodDTO.setId(rs.getString("ID"));
+				foodDTO.setPwd(rs.getString("PWD"));
+				foodDTO.setName(rs.getString("NAME"));
+				foodDTO.setCode(rs.getInt("CODE"));
+				foodList.add(foodDTO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-        return foodList;
-    }
+		return foodList;
+	}
 
 
 	public int deleteId(String id) {
@@ -1005,58 +1002,58 @@ public class FoodDAO {
 	public List<FoodDTO> res_list() {
 		List<FoodDTO> resList = new ArrayList<>();
 		getConnection();
-        String query = "SELECT * FROM RESTAURANT ORDER BY NAME ASC";
-        try {
-            pstmt = con.prepareStatement(query);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                FoodDTO foodDTO = new FoodDTO();
-                foodDTO.setRes_name(rs.getString("NAME"));
-                foodDTO.setRes_pnumber(rs.getString("PNUMBER"));
-                foodDTO.setRes_address(rs.getString("ADDRESS"));
-                foodDTO.setRes_kind(rs.getInt("KIND"));
-                resList.add(foodDTO);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+		String query = "SELECT * FROM RESTAURANT ORDER BY NAME ASC";
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FoodDTO foodDTO = new FoodDTO();
+				foodDTO.setRes_name(rs.getString("NAME"));
+				foodDTO.setRes_pnumber(rs.getString("PNUMBER"));
+				foodDTO.setRes_address(rs.getString("ADDRESS"));
+				foodDTO.setRes_kind(rs.getInt("KIND"));
+				resList.add(foodDTO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-        return resList;
+		return resList;
 	}
 
 	public List<FoodDTO> menu_list() {
 		List<FoodDTO> menuList = new ArrayList<>();
 		getConnection();
-        String query = "SELECT * FROM FOODMENU ORDER BY KIND ASC";
-        try {
-            pstmt = con.prepareStatement(query);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                FoodDTO foodDTO = new FoodDTO();
-                foodDTO.setFood_name(rs.getString("NAME"));
-                foodDTO.setFood_price(rs.getInt("PRICE"));
-                foodDTO.setFood_kind(rs.getInt("KIND"));
-                menuList.add(foodDTO);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstmt != null) pstmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+		String query = "SELECT * FROM FOODMENU ORDER BY KIND ASC";
+		try {
+			pstmt = con.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				FoodDTO foodDTO = new FoodDTO();
+				foodDTO.setFood_name(rs.getString("NAME"));
+				foodDTO.setFood_price(rs.getInt("PRICE"));
+				foodDTO.setFood_kind(rs.getInt("KIND"));
+				menuList.add(foodDTO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-        return menuList;
+		return menuList;
 	}
 
 
